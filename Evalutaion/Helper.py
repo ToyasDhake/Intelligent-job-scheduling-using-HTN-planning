@@ -13,8 +13,9 @@ class Robot:
         self.position = position
         self.status = status
 
+
 class Location:
-    def __init__(self, position, status=0, isFree = True):
+    def __init__(self, position, status=0, isFree=True):
         self.position = position
         self.status = status
         self.isFree = isFree
@@ -47,7 +48,8 @@ class Hospital:
 
     def sendRobot(self, robotID, locationID):
         if self.locations[locationID].isFree:
-            self.cost += sqrt((self.robots[robotID].position[0] - self.locations[locationID].position[0])**2 + (self.robots[robotID].position[1] - self.locations[locationID].position[1])**2)
+            self.cost += sqrt((self.robots[robotID].position[0] - self.locations[locationID].position[0]) ** 2 + (
+                        self.robots[robotID].position[1] - self.locations[locationID].position[1]) ** 2)
             self.robots[robotID].position = self.locations[locationID].position
             if self.locations[locationID].status != 0:
                 self.robots[robotID].status = "Busy"
@@ -56,16 +58,14 @@ class Hospital:
         else:
             return False
 
-
-
     def tickOnce(self):
         self.time += 1
-        if rand()<self.contaminationRate:
+        if rand() < self.contaminationRate:
             temp = True
             while temp:
                 val = randint(0, len(self.locations))
                 if self.locations[val].status == 0:
-                    self.locations[val].status = randint(1,3)
+                    self.locations[val].status = randint(1, 3)
                     temp = False
         for location in self.locations:
             self.cost += location.status
@@ -80,12 +80,11 @@ class Hospital:
                             self.locations[i].status -= cleaningPowerHigh
                         else:
                             self.locations[i].status -= cleaningPowerLow
-                        if self.locations[i].status <0:
+                        if self.locations[i].status < 0:
                             self.locations[i].status = 0
                     else:
                         self.robots[robot].status = "Free"
                         self.locations[i].isFree = True
-
 
 
 if __name__ == "__main__":
@@ -93,5 +92,3 @@ if __name__ == "__main__":
     hospital = Hospital(locations, ["Low", "Low", "High"])
     for _ in range(10):
         hospital.tickOnce()
-
-
