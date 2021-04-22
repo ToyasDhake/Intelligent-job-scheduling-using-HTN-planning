@@ -1,0 +1,28 @@
+from Helper import Hospital
+
+timeLenght = 100
+
+locations = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9]]
+
+robotConfig = ["Low", "Low", "High"]
+hospital = Hospital(locations, robotConfig)
+
+robotConfigLength = len(robotConfig)
+currentRobot = 0
+
+
+def increaseCounter(val):
+    val += 1
+    val %= robotConfigLength
+    return val
+
+
+for _ in range(timeLenght):
+    contaminations = hospital.getContaminations()
+    for contamination in contaminations:
+        freeRobots = hospital.getRobots("Free")
+        if currentRobot in freeRobots:
+            hospital.sendRobot(currentRobot, contamination)
+            currentRobot = increaseCounter(currentRobot)
+    hospital.tickOnce()
+    print(hospital.getLocationsStatus(), hospital.cost)
