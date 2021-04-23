@@ -1,8 +1,13 @@
-from numpy.random import rand, randint
+import numpy as np
 from math import sqrt
 
-cleaningPowerHigh = 2
-cleaningPowerLow = 0.5
+np.random.seed(1)
+
+cleaningPowerHigh = 4
+cleaningPowerLow = 1
+
+lowerContamination = 1
+higherContamination = 4
 
 travelingWeightage = 0.2
 
@@ -49,7 +54,7 @@ class Hospital:
     def sendRobot(self, robotID, locationID):
         if self.locations[locationID].isFree:
             self.cost += sqrt((self.robots[robotID].position[0] - self.locations[locationID].position[0]) ** 2 + (
-                        self.robots[robotID].position[1] - self.locations[locationID].position[1]) ** 2)
+                        self.robots[robotID].position[1] - self.locations[locationID].position[1]) ** 2)*travelingWeightage
             self.robots[robotID].position = self.locations[locationID].position
             if self.locations[locationID].status != 0:
                 self.robots[robotID].status = "Busy"
@@ -58,15 +63,29 @@ class Hospital:
         else:
             return False
 
+    def contaminate(self):
+        temp = True
+        while temp:
+            if len(self.getContaminations()) == len(self.locations):
+                temp = False
+            val = np.random.randint(0, len(self.locations))
+            if self.locations[val].status == 0:
+                if np.random.randint(1, 3) == 1:
+                    self.locations[val].status = lowerContamination
+                else:
+                    self.locations[val].status = higherContamination
+                temp = False
+
+
     def tickOnce(self):
         self.time += 1
-        if rand() < self.contaminationRate:
-            temp = True
-            while temp:
-                val = randint(0, len(self.locations))
-                if self.locations[val].status == 0:
-                    self.locations[val].status = randint(1, 3)
-                    temp = False
+        temp = np.random.rand()
+        if temp < self.contaminationRate/4:
+            self.contaminate()
+            self.contaminate()
+        elif temp < self.contaminationRate:
+            self.contaminate()
+
         for location in self.locations:
             self.cost += location.status
 

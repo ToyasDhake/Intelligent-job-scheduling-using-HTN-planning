@@ -10,8 +10,9 @@ def getDistance(robot, location):
     return sqrt((robot[0] - location[0]) ** 2 + (robot[1] - location[1]) ** 2)
 
 
-hospital = Hospital(locations, ["Low", "Low", "High"])
+hospital = Hospital(locations, ["Low", "Low", "High", "High"])
 for _ in range(timeLenght):
+    hospital.tickOnce()
     contaminations = hospital.getContaminations()
     for contamination in contaminations:
         freeRobots = hospital.getRobots("Free")
@@ -21,5 +22,4 @@ for _ in range(timeLenght):
         if len(freeRobots) > 0:
             hospital.sendRobot(freeRobots[distance.index(min(distance))], contamination)
 
-    hospital.tickOnce()
     print(hospital.getLocationsStatus(), hospital.cost)
