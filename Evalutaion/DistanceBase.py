@@ -4,13 +4,14 @@ from math import sqrt
 timeLenght = 100
 
 locations = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9]]
+robotConfig = ["Low", "Low", "High", "High"]
 
 
 def getDistance(robot, location):
     return sqrt((robot[0] - location[0]) ** 2 + (robot[1] - location[1]) ** 2)
 
 
-hospital = Hospital(locations, ["Low", "Low", "High", "High"])
+hospital = Hospital(locations, robotConfig)
 for _ in range(timeLenght):
     hospital.tickOnce()
     contaminations = hospital.getContaminations()
