@@ -7,35 +7,23 @@ locations = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9,
 robotConfig = ["Low", "Low", "High", "High"]
 hospital = Hospital(locations, robotConfig)
 
-lowPoweredRobots = []
-highPoweredRoobts = []
+robotConfigLength = len(robotConfig)
+currentRobot = 0
 
-def seperateRobtos(hopital, robots):
-    global lowPoweredRobots
-    global highPoweredRoobts
-    lowPoweredRobots = []
-    highPoweredRoobts = []
-    for robot in robots:
-        if hopital.robots[robot].power == "Low":
-            lowPoweredRobots.append(robot)
-        else:
-            highPoweredRoobts.append(robot)
+
+def increaseCounter(val):
+    val += 1
+    val %= robotConfigLength
+    return val
+
 
 for _ in range(timeLenght):
     hospital.tickOnce()
     contaminations = hospital.getContaminations()
     for contamination in contaminations:
         freeRobots = hospital.getRobots("Free")
-        seperateRobtos(hospital, freeRobots)
-        if hospital.locations[contamination].status > 1:
-            for robot in highPoweredRoobts:
-                if hospital.robots[robot].status == "Free":
-                    hospital.sendRobot(robot, contamination)
-                    break
-        else:
-            for robot in lowPoweredRobots:
-                if hospital.robots[robot].status == "Free":
-                    hospital.sendRobot(robot, contamination)
-                    break
-
+        while not currentRobot in freeRobots:
+            currentRobot = increaseCounter(currentRobot)
+        hospital.sendRobot(currentRobot, contamination)
+        currentRobot = increaseCounter(currentRobot)
     print(hospital.getLocationsStatus(), hospital.cost)
