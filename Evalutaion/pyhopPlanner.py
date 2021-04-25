@@ -27,8 +27,8 @@ for robot in robotConfig:
     else:
         low += 1
 
-locationsForPyHop = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [0, 0], [0, 1], [0, 2],
-                     [0, 3]]
+
+locationsForPyHop = locations + [[0, i] for i in range(len(robotConfig))]
 locationsList = ['loc' + str(i + 1) for i in range(len(locations))] + ['botHome' + str(i + 1) for i in
                                                                        range(len(robotConfig))]
 rigid.types = {
@@ -207,10 +207,10 @@ pyhop2.declare_task_methods('clean_hospital', do_nothing, clean_all)
 pyhop2.set_current_domain(domain_name)
 hospital = Hospital(locations, robotConfig)
 # seperateRobots(hospital, hospital.robots)
-
 for _ in range(timeLenght):
     hospital.tickOnce()
     print(hospital.getLocationsStatus(), hospital.cost)
     contaminations = hospital.getContaminations()
     pyhop2.find_plan(state0, [('clean_hospital', contaminations, hospital.robots)], verbose=0)
     pyhop2.run_lazy_lookahead(state0, [('clean_hospital', contaminations, hospital.robots)], verbose=0)
+
